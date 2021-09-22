@@ -36,16 +36,62 @@ let player = {
 	},
 };
 
+let sbImage = new Image();
+sbImage.src = "../Images/scoreboard.png"
+
 let scoreBoard = {
 	goodTally: 0,
 	badTally: 0,
+	goodBlocks: [],
+	badBlocks: [],
+	x: 8,
+	y: 544,
+	scoredBlockY: 552, 
+	victoryBlockX: 384,
+	isGameOver: false,
+	didPlayerWin: false,
 	scoreBlock: function (block) {
+		let goodStartingX = 16;
+		let badStartingX = 752;
+		let scoreBlockSpacing = 40;
 		if (block.isGoodBlock) {
 			this.goodTally++;
+			this.goodBlocks.push(block);
+			spacingMultiplier = this.goodBlocks.length - 1;
+			if(spacingMultiplier < 8){
+				block.x = goodStartingX + (spacingMultiplier * scoreBlockSpacing);
+			}
+			else{
+				block.x = this.victoryBlockX;
+				this.isGameOver = true;
+				this.didPlayerWin = true;
+			}
 		} else {
 			this.badTally++;
+			this.badBlocks.push(block);
+			spacingMultiplier = this.badBlocks.length - 1;
+			if(spacingMultiplier < 8){
+				block.x = badStartingX - (spacingMultiplier * scoreBlockSpacing);
+			}
+			else{
+				block.x = this.victoryBlockX;
+				this.isGameOver = true;
+				this.didPlayerWin = false;
+			}
 		}
+		block.isScored = true;
+		block.y = this.scoredBlockY;
 	},
+	update: function(){
+		
+	},
+	render: function(){
+		ctx.save();
+		ctx.drawImage(sbImage, this.x, this.y);
+		this.goodBlocks.forEach(block => block.render());
+		this.badBlocks.forEach(block => block.render());
+		ctx.restore();
+	}
 };
 
 window.addEventListener("keydown", (e) => {
@@ -141,7 +187,11 @@ function gameLoop(timestamp) {
 	player.update();
 	player.render();
 
+	scoreBoard.update();
+	scoreBoard.render();
+	if(!scoreBoard.isGameOver){
 	requestAnimationFrame(gameLoop);
+	}
 }
 
 requestAnimationFrame(gameLoop);
