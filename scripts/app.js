@@ -4,8 +4,8 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 
-let goodBlockRatio = 0.25;
-let blockSpawnRate = 500;
+let goodBlockRatio = 0.1;
+let blockSpawnRate = 100;
 const BLOCK_SIZE = 32;
 
 let player = {
@@ -16,7 +16,7 @@ let player = {
 
 	isMovingLeft: false,
 	isMovingRight: false,
-	speed: 10,
+	speed: 6,
 
 	update: function () {
 		// move left or move right if moving?
@@ -93,7 +93,6 @@ let scoreBoard = {
 		ctx.restore();
 	}
 };
-
 window.addEventListener("keydown", (e) => {
 	if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A")
 		player.isMovingLeft = true;
@@ -159,6 +158,7 @@ class Block {
 
 // let myBlock = new Block();
 // console.log(myBlock);
+
 
 let blocks = [new Block()];
 let currentTime = 0;

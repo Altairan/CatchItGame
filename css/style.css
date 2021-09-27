@@ -15,5 +15,14 @@ body {
 #game-canvas {
     width: 800px;
     height: 600px;
+    top: 1px;
     border: solid 1px black;
+}
+#retryButton{
+    position:absolute;
+    bottom: 10px;
+    height: 32px;
+    width: 100px;
+    left:50%;
+    font-family: 'Gemunu Libre', sans-serif;
 }
