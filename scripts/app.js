@@ -198,7 +198,7 @@ class Bomb {
 
 // let myBlock = new Block();
 // console.log(myBlock);
-//test
+
 
 let blocks = [new Block()];
 let bombs = [new Bomb()];
