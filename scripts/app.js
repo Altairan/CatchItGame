@@ -22,11 +22,8 @@ let player = {
 		// move left or move right if moving?
 		if (this.isMovingLeft) this.x -= this.speed;
 		if (this.isMovingRight) this.x += this.speed;
-		// make sure we are not off the canvas
-		if (this.x < 0) {
-			this.x = 0;
-		}
-		if (this.x > canvas.width - this.width) this.x = canvas.width - this.width;
+		if(this.isMovingLeft && this.x <= 0)this.x = 740;
+		if(this.isMovingRight && this.x >= 740) this.x = 0;
 	},
 	render: function () {
 		ctx.save();
@@ -133,6 +130,7 @@ class Block {
 
 	render() {
 		ctx.save();
+		ctx.strokeRect(this.x, this.y, this.width, this.height);
 		ctx.fillStyle = `hsla(${this.color}, 100%, 50%, ${this.opacity})`;
 		ctx.fillRect(this.x, this.y, this.width, this.height);
 		ctx.restore();
