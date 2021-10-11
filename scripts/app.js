@@ -6,6 +6,7 @@ canvas.height = 600;
 
 let goodBlockRatio = 0.1;
 let blockSpawnRate = 100;
+let bombSpawnRate = 1000;
 const BLOCK_SIZE = 32;
 
 let player = {
@@ -35,6 +36,9 @@ let player = {
 
 let sbImage = new Image();
 sbImage.src = "../Images/scoreboard.png"
+
+let bombImage = new Image();
+bombImage.src = "../Images/bomb.png"
 
 let scoreBoard = {
 	goodTally: 0,
@@ -154,13 +158,53 @@ class Block {
 	}
 }
 
+class Bomb {
+	constructor() {
+		this.width = 32.132;
+		this.height = 48.298;
+		this.x = Math.random() * (canvas.width - this.width);
+		this.y = 0 - this.height; // off screen to start
+		this.speed = 4;
+		this.isOffscreen = false;
+		this.isCaught = false;
+		this.isFading = false;
+		this.opacity = 1;
+	}
+
+	update() {
+		this.y += this.speed;
+		this.isOffscreen = this.y >= canvas.height;
+		this.checkForCatch();
+		if (this.isFading) this.opacity -= 0.1;
+	}
+
+	render() {
+		ctx.save();
+		ctx.drawImage(bombImage, this.x, this.y, this.width, this.height);
+		ctx.restore();
+	}
+
+	checkForCatch() {
+		let bottom = this.y + this.height;
+
+		// if I am above the catch block, return
+		if (bottom < player.y) return;
+		if (this.isFading || this.isOffscreen || this.isCaught) return;
+
+		scoreBoard.isGameOver = true;
+
+	}
+}
+
 // let myBlock = new Block();
 // console.log(myBlock);
-
+//test
 
 let blocks = [new Block()];
+let bombs = [new Bomb()];
 let currentTime = 0;
 let timeSinceLastBlock = 0;
+let timeSinceLastBomb = 0;
 
 function gameLoop(timestamp) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -174,12 +218,24 @@ function gameLoop(timestamp) {
 		blocks.push(new Block());
 	}
 
+	timeSinceLastBomb += changeInTime;
+	if (timeSinceLastBomb >= bombSpawnRate) {
+		timeSinceLastBomb = 0;
+		bombs.push(new Bomb());
+	}
+
 	blocks.forEach((block) => {
 		block.update();
 		block.render();
 	});
 
+	bombs.forEach((bomb) => {
+		bomb.update();
+		bomb.render();
+	});
+
 	blocks = blocks.filter((b) => !b.isOffscreen && !b.isCaught);
+	bombs = bombs.filter((q) => !q.isOffscreen && !q.isCaught);
 	//console.log(blocks);
 
 	player.update();
