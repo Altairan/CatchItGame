@@ -4,8 +4,8 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 
-let goodBlockRatio = 0.25;
-let blockSpawnRate = 500;
+let goodBlockRatio = 0.1;
+let blockSpawnRate = 100;
 const BLOCK_SIZE = 32;
 
 let player = {
@@ -16,17 +16,14 @@ let player = {
 
 	isMovingLeft: false,
 	isMovingRight: false,
-	speed: 10,
+	speed: 6,
 
 	update: function () {
 		// move left or move right if moving?
 		if (this.isMovingLeft) this.x -= this.speed;
 		if (this.isMovingRight) this.x += this.speed;
-		// make sure we are not off the canvas
-		if (this.x < 0) {
-			this.x = 0;
-		}
-		if (this.x > canvas.width - this.width) this.x = canvas.width - this.width;
+		if(this.isMovingLeft && this.x <= 0)this.x = 740;
+		if(this.isMovingRight && this.x >= 740) this.x = 0;
 	},
 	render: function () {
 		ctx.save();
@@ -93,7 +90,6 @@ let scoreBoard = {
 		ctx.restore();
 	}
 };
-
 window.addEventListener("keydown", (e) => {
 	if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A")
 		player.isMovingLeft = true;
@@ -134,6 +130,7 @@ class Block {
 
 	render() {
 		ctx.save();
+		ctx.strokeRect(this.x, this.y, this.width, this.height);
 		ctx.fillStyle = `hsla(${this.color}, 100%, 50%, ${this.opacity})`;
 		ctx.fillRect(this.x, this.y, this.width, this.height);
 		ctx.restore();
@@ -159,6 +156,7 @@ class Block {
 
 // let myBlock = new Block();
 // console.log(myBlock);
+
 
 let blocks = [new Block()];
 let currentTime = 0;
