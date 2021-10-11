@@ -190,15 +190,18 @@ class Bomb {
 		// if I am above the catch block, return
 		if (bottom < player.y) return;
 		if (this.isFading || this.isOffscreen || this.isCaught) return;
-
+		let rhs = this.x + this.width;
+		if (rhs < player.x || this.x > player.x + player.width) {
+			this.isFading = true;
+			return;
+		}
 		scoreBoard.isGameOver = true;
-
 	}
 }
 
 // let myBlock = new Block();
 // console.log(myBlock);
-//test
+
 
 let blocks = [new Block()];
 let bombs = [new Bomb()];
