@@ -7,6 +7,7 @@ canvas.height = 600;
 let goodBlockRatio = 0.1;
 let blockSpawnRate = 100;
 let bombSpawnRate = 1000;
+let medSpawnRate = 2000;
 const BLOCK_SIZE = 32;
 
 let player = {
@@ -39,6 +40,9 @@ sbImage.src = "../Images/scoreboard.png"
 
 let bombImage = new Image();
 bombImage.src = "../Images/bomb.png"
+
+let medImage = new Image();
+medImage.src = "../Images/medkit.png"
 
 let scoreBoard = {
 	goodTally: 0,
@@ -134,7 +138,7 @@ class Block {
 
 	render() {
 		ctx.save();
-		ctx.strokeRect(this.x, this.y, this.width, this.height);
+		ctx.strokeRect(this.x, this.y, this.width, this.height,);
 		ctx.fillStyle = `hsla(${this.color}, 100%, 50%, ${this.opacity})`;
 		ctx.fillRect(this.x, this.y, this.width, this.height);
 		ctx.restore();
@@ -195,7 +199,50 @@ class Bomb {
 			this.isFading = true;
 			return;
 		}
+		ctx.clearRect(this.x, this.y, this.width, this.height);
 		scoreBoard.isGameOver = true;
+	}
+}
+
+class Med {
+	constructor() {
+		this.width = 39.216;
+		this.height = 33.803;
+		this.x = Math.random() * (canvas.width - this.width);
+		this.y = 0 - this.height; // off screen to start
+		this.speed = 7;
+		this.isOffscreen = false;
+		this.isCaught = false;
+		this.isFading = false;
+		this.opacity = 1;
+	}
+
+	update() {
+		this.y += this.speed;
+		this.isOffscreen = this.y >= canvas.height;
+		this.checkForCatch();
+		if (this.isFading) this.opacity -= 0.1;
+	}
+
+	render() {
+		ctx.save();
+		ctx.drawImage(medImage, this.x, this.y, this.width, this.height);
+		ctx.restore();
+	}
+
+	checkForCatch() {
+		let bottom = this.y + this.height;
+
+		// if I am above the catch block, return
+		if (bottom < player.y) return;
+		if (this.isFading || this.isOffscreen || this.isCaught) return;
+		let rhs = this.x + this.width;
+		if (rhs < player.x || this.x > player.x + player.width) {
+			this.isFading = true;
+			return;
+		}
+		scoreBoard.badTally--;
+		this.isOffscreen = true;
 	}
 }
 
@@ -205,9 +252,11 @@ class Bomb {
 
 let blocks = [new Block()];
 let bombs = [new Bomb()];
+let meds = [new Med()];
 let currentTime = 0;
 let timeSinceLastBlock = 0;
 let timeSinceLastBomb = 0;
+let timeSinceLastMed = 0 ;
 
 function gameLoop(timestamp) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -227,6 +276,12 @@ function gameLoop(timestamp) {
 		bombs.push(new Bomb());
 	}
 
+	timeSinceLastMed += changeInTime;
+	if (timeSinceLastMed >= medSpawnRate) {
+		timeSinceLastMed = 0;
+		meds.push(new Med());
+	}
+
 	blocks.forEach((block) => {
 		block.update();
 		block.render();
@@ -237,8 +292,14 @@ function gameLoop(timestamp) {
 		bomb.render();
 	});
 
+	meds.forEach((med) => {
+		med.update();
+		med.render();
+	});
+
 	blocks = blocks.filter((b) => !b.isOffscreen && !b.isCaught);
 	bombs = bombs.filter((q) => !q.isOffscreen && !q.isCaught);
+	meds = meds.filter((m) => !m.isOffscreen && !m.isCaught);
 	//console.log(blocks);
 
 	player.update();

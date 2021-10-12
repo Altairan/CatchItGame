@@ -17,6 +17,7 @@ body {
     height: 600px;
     top: 1px;
     border: solid 1px black;
+    background-image:'../Images/background.png';
 }
 #retryButton{
     position:absolute;

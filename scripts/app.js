@@ -200,6 +200,7 @@ class Bomb {
 			return;
 		}
 		scoreBoard.isGameOver = true;
+		
 	}
 }
 
@@ -306,6 +307,7 @@ function gameLoop(timestamp) {
 
 	scoreBoard.update();
 	scoreBoard.render();
+	console.log(scoreBoard.badTally);
 	if(!scoreBoard.isGameOver){
 	requestAnimationFrame(gameLoop);
 	}
