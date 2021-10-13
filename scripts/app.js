@@ -10,6 +10,11 @@ let bombSpawnRate = 1000;
 let medSpawnRate = 2000;
 const BLOCK_SIZE = 32;
 
+ctx.font = '30px serif';
+
+ctx.textAlign = 'left';
+ctx.fillText('left-aligned', 400, 300);
+
 let player = {
 	x: 0,
 	y: canvas.height - BLOCK_SIZE * 3,
@@ -70,6 +75,11 @@ let scoreBoard = {
 				block.x = this.victoryBlockX;
 				this.isGameOver = true;
 				this.didPlayerWin = true;
+				ctx.font = '30px serif';
+				ctx.textAlign = 'center';
+				ctx.fillText('Game Over', 400, 300);
+				ctx.font = '20px serif';
+				ctx.fillText('You Win', 400, 325);
 			}
 		} else {
 			this.badTally++;
@@ -82,6 +92,11 @@ let scoreBoard = {
 				block.x = this.victoryBlockX;
 				this.isGameOver = true;
 				this.didPlayerWin = false;
+				ctx.font = '30px serif';
+				ctx.textAlign = 'center';
+				ctx.fillText('Game Over', 400, 300);
+				ctx.font = '20px serif';
+				ctx.fillText('You Lose', 400, 325);
 			}
 		}
 		block.isScored = true;
@@ -200,7 +215,11 @@ class Bomb {
 			return;
 		}
 		scoreBoard.isGameOver = true;
-		
+		ctx.font = '30px serif';
+		ctx.textAlign = 'center';
+		ctx.fillText('Game Over', 400, 300);
+		ctx.font = '20px serif';
+		ctx.fillText('You Lose', 400, 325);
 	}
 }
 

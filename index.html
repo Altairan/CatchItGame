@@ -12,8 +12,12 @@
 </head>
 
 <body>
+    <script>
+        ctx.font = "32px Arial";
+ctx.textAlign = "center";
+ctx.fillText("Game Over", 400, 300);
+    </script>
     <canvas id="game-canvas"style="background: url('./Images/background.png')"></canvas>
-    
     <script src="scripts/app.js"></script>
     <button type="button" onClick="window.location.reload();" id='retryButton'>Reset Game</button>
 </body>
