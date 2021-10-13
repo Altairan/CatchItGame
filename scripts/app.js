@@ -225,8 +225,8 @@ class Bomb {
 
 class Med {
 	constructor() {
-		this.width = 39.216;
-		this.height = 33.803;
+		this.width = 32.400;
+		this.height = 33.331;
 		this.x = Math.random() * (canvas.width - this.width);
 		this.y = 0 - this.height; // off screen to start
 		this.speed = 7;
@@ -261,6 +261,7 @@ class Med {
 			return;
 		}
 		scoreBoard.badTally--;
+		//ctx.clearRect(scoreBoard.victoryBlockX, scoreBoard.y, block.width, block.height);
 		this.isOffscreen = true;
 	}
 }
