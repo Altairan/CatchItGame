@@ -98,6 +98,9 @@ let scoreBoard = {
 				ctx.font = '20px serif';
 				ctx.fillText('You Lose', 400, 325);
 			}
+			if(this.badTally++){
+				this.goodBlocks.pop();
+			}
 		}
 		block.isScored = true;
 		block.y = this.scoredBlockY;
@@ -142,6 +145,7 @@ class Block {
 		this.isFading = false;
 		this.opacity = 1;
 		this.color = this.isGoodBlock ? 120 : 0;
+		this.outlineColor = 'black'
 	}
 
 	update() {
@@ -229,7 +233,7 @@ class Med {
 		this.height = 33.331;
 		this.x = Math.random() * (canvas.width - this.width);
 		this.y = 0 - this.height; // off screen to start
-		this.speed = 7;
+		this.speed = 9;
 		this.isOffscreen = false;
 		this.isCaught = false;
 		this.isFading = false;
@@ -261,11 +265,48 @@ class Med {
 			return;
 		}
 		scoreBoard.badTally--;
-		//ctx.clearRect(scoreBoard.victoryBlockX, scoreBoard.y, block.width, block.height);
+		scoreBoard.badBlocks.pop();
 		this.isOffscreen = true;
 	}
 }
 
+class CountDownTimer {
+	constructor() {
+		this.x = canvas.width - 120;
+		this.y = 70;
+		this.timer = 1;
+		this.lastUpdate = 0;
+
+		this.countdownGradient = ctx.createLinearGradient(0, 0, 0, this.y);
+		this.countdownGradient.addColorStop("0.4", "#fff");
+		this.countdownGradient.addColorStop("0.5", "#000");
+		this.countdownGradient.addColorStop("0.55", "#4040ff");
+		this.countdownGradient.addColorStop("0.6", "#000");
+		this.countdownGradient.addColorStop("0.9", "#fff");
+	}
+
+	update(deltaTime) {
+		this.lastUpdate += deltaTime;
+		if (this.lastUpdate >= 1000) {
+			this.timer -= 1;
+			this.lastUpdate = 0;
+		}
+		if (this.timer === 0) {
+			scoreBoard.isGameOver = true;
+		}
+	}
+
+	render() {
+		ctx.save();
+		ctx.fillStyle = this.countdownGradient;
+		ctx.font = "90px Georgia";
+		ctx.strokeText(this.timer, this.x, this.y);
+		ctx.fillText(this.timer, this.x, this.y);
+		ctx.restore();
+	}
+}
+
+let countdown = new CountDownTimer();
 // let myBlock = new Block();
 // console.log(myBlock);
 
